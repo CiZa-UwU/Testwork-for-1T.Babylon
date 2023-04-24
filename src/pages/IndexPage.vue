@@ -1,6 +1,17 @@
 <template>
-  <q-page class="row items-center justify-evenly">
+  <q-page class="q-pa-md">
     <canvas ref="bjsCanvas" width="500" height="500" />
+
+    <div class="q-gutter-sm flex flex-center block">
+      <q-radio dense v-model="shape" val="Курсор" label="Курсор" />
+      <q-radio dense v-model="shape" val="Смещение" label="Смещение" />
+      <q-radio dense v-model="shape" val="Вращение" label="Вращение" />
+      <q-radio dense v-model="shape" val="Маштабирование" label="Маштабирование" />
+    </div>
+
+    <div class="q-px-sm q-pt-sm">
+      Выбрано: <strong>{{ shape }}</strong>
+    </div>
   </q-page>
 </template>
 
@@ -20,6 +31,7 @@ export default {
     });
 
     return {
+      shape: ref('Курсор'),
       bjsCanvas,
     };
   },
