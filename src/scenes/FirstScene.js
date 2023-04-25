@@ -1,32 +1,50 @@
 import * as BABYLON from "babylonjs"
-var createScene = function (canvas) {
-  // This creates a basic Babylon Scene object (non-mesh)
+let createScene = function (canvas) {
   const engine = new BABYLON.Engine(canvas);
-  var scene = new BABYLON.Scene(engine);
+  let scene = new BABYLON.Scene(engine);
 
-  // This creates and positions a free camera (non-mesh)
-  var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
+  let camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
 
-  // This targets the camera to scene origin
   camera.setTarget(BABYLON.Vector3.Zero());
-
-  // This attaches the camera to the canvas
   camera.attachControl(canvas, true);
-  // This creates a light, aiming 0,1,0 - to the sky (non-mesh)
-  var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
 
-  // Default intensity is 1. Let's dim the light a small amount
+  let light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
   light.intensity = 0.7;
 
-  // Our built-in 'sphere' shape.
-  var sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 2, segments: 32}, scene);
-
-  // Move the sphere upward 1/2 its height
+  let sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 2, segments: 32}, scene);
   sphere.position.y = 1;
+  sphere.material = new BABYLON.StandardMaterial("box_mat", scene);
 
-  // Our built-in 'ground' shape.
-  var ground = BABYLON.MeshBuilder.CreateGround("ground", {width: 6, height: 6}, scene);
+  let ground = BABYLON.MeshBuilder.CreateGround("ground", {width: 6, height: 6}, scene);
 
+  let utilLayer = new BABYLON.UtilityLayerRenderer(scene);
+  
+  let gizmo = new BABYLON.PositionGizmo(utilLayer);
+
+  gizmo.updateGizmoPositionToMatchAttachedMesh = true;
+
+  let currentMesh;
+
+  let pointerDown = function (mesh) {
+    currentMesh = mesh;
+    gizmo.attachedMesh = sphere
+  }
+
+  scene.onPointerObservable.add((pointerInfo) => {      		
+  switch (pointerInfo.type) {
+    case BABYLON.PointerEventTypes.POINTERDOWN:
+      if(pointerInfo.pickInfo.hit && pointerInfo.pickInfo.pickedMesh != ground) {
+        pointerDown(pointerInfo.pickInfo.pickedMesh)
+        pointerInfo.pickInfo.pickedMesh.material.diffuseColor = BABYLON.Color3.Green();
+      }
+      else{
+        gizmo.attachedMesh = null
+        sphere.material = new BABYLON.StandardMaterial("box_mat", scene);
+      }
+      break;
+    }
+  });
+  
   engine.runRenderLoop(() => {
     scene.render();
   });

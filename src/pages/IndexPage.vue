@@ -3,10 +3,10 @@
     <canvas ref="bjsCanvas" width="500" height="500" />
 
     <div class="q-gutter-sm flex flex-center block">
-      <q-radio dense v-model="shape" val="Курсор" label="Курсор" />
-      <q-radio dense v-model="shape" val="Смещение" label="Смещение" />
-      <q-radio dense v-model="shape" val="Вращение" label="Вращение" />
-      <q-radio dense v-model="shape" val="Маштабирование" label="Маштабирование" />
+      <q-radio dense v-model="shape" val="cursor" label="Курсор" />
+      <q-radio dense v-model="shape" val="offset" label="Смещение" />
+      <q-radio dense v-model="shape" val="rotate" label="Вращение" />
+      <q-radio dense v-model="shape" val="scale" label="Маштабирование" />
     </div>
 
     <div class="q-px-sm q-pt-sm">
@@ -23,6 +23,7 @@ export default {
   name: "BabylonScene",
   setup() {
     const bjsCanvas = ref(null);
+    const shape = ref("cursor")
 
     onMounted(() => {
       if (bjsCanvas.value) {
@@ -31,7 +32,7 @@ export default {
     });
 
     return {
-      shape: ref('Курсор'),
+      shape,
       bjsCanvas,
     };
   },
