@@ -15,26 +15,21 @@
   </q-page>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { ref, onMounted } from "@vue/runtime-core";
-import { createScene } from "../scenes/FirstScene";
+import { watch } from "vue";
+import { myScene } from "../scenes/FirstScene";
 
-export default {
-  name: "BabylonScene",
-  setup() {
-    const bjsCanvas = ref(null);
-    const shape = ref("cursor")
+const bjsCanvas = ref(null);
+const shape = ref("cursor");
 
-    onMounted(() => {
-      if (bjsCanvas.value) {
-        createScene(bjsCanvas.value);
-      }
-    });
+onMounted(() => {
+  if (bjsCanvas.value) {
+    myScene.createScene(bjsCanvas.value);
+  }
+});
 
-    return {
-      shape,
-      bjsCanvas,
-    };
-  },
-};
+watch(shape, () => {
+  myScene.ChangeGizmo(shape.value);
+});
 </script>
