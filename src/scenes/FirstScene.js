@@ -2,6 +2,7 @@ import * as BABYLON from "babylonjs"
 
 const myScene = {
 
+  //Переменные 
   action: null,
   MainMesh: null,
   AbstractMesh: null,
@@ -25,7 +26,7 @@ const myScene = {
     light.intensity = 0.7;
   
     let sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 2, segments: 32}, scene);
-    let sphereAbstract = new BABYLON.AbstractMesh("sphereAbstract", scene);
+    let sphereAbstract = new BABYLON.AbstractMesh("sphereAbstract", scene); //Абстрактрая сфера
     sphereAbstract.position.y = 1
     sphere.parent = sphereAbstract
     sphere.material = new BABYLON.StandardMaterial("box_mat", scene);
@@ -48,6 +49,7 @@ const myScene = {
       }
     }
   
+    //Слушатель кликов
     scene.onPointerObservable.add((pointerInfo) => {      		
     switch (pointerInfo.type) {
       case BABYLON.PointerEventTypes.POINTERDOWN:
@@ -77,6 +79,7 @@ const myScene = {
 
   },
 
+  //Функция которая меняет gizmo
   ChangeGizmo: function(cur_gizmo){
     switch(cur_gizmo){
       case 'cursor':
@@ -105,11 +108,13 @@ const myScene = {
         this.action = 'scale'
         this.ClearGizmo(this.gizmo)
         this.gizmo = new BABYLON.ScaleGizmo(this.utilLayer);
-        this.gizmo.attachedMesh = this.currentMesh
+        this.gizmo.attachedMesh = this.currentMesh //Здесь применяем гизмо к "настоящей" сфере
+                                                   //чтобы сохранить возможность вращения для абстрактной
         break
     }
   },
 
+  //Функция очищающая gizmo
   ClearGizmo: function(gizmo){
     if(gizmo !== null){
       if(gizmo.attachedMesh !== null){
