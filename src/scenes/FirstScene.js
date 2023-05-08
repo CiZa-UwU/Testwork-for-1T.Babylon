@@ -1,13 +1,19 @@
 import * as BABYLON from "babylonjs"
 
 const myScene = {
-  
+
+  action: null,
+  MainMesh: null,
+  AbstractMesh: null,
   gizmo: null,
   utilLayer: null,
   currentMesh: null,
 
   createScene: function (canvas) {
     const engine = new BABYLON.Engine(canvas);
+
+    let action
+
     let scene = new BABYLON.Scene(engine);
   
     let camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
@@ -19,7 +25,9 @@ const myScene = {
     light.intensity = 0.7;
   
     let sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 2, segments: 32}, scene);
-    sphere.position.y = 1;
+    let sphereAbstract = new BABYLON.AbstractMesh("sphereAbstract", scene);
+    sphereAbstract.position.y = 1
+    sphere.parent = sphereAbstract
     sphere.material = new BABYLON.StandardMaterial("box_mat", scene);
   
     let ground = BABYLON.MeshBuilder.CreateGround("ground", {width: 6, height: 6}, scene);
@@ -33,7 +41,10 @@ const myScene = {
     let pointerDown = function (mesh) {
       if(gizmo){
         currentMesh = mesh;
-        gizmo.attachedMesh = currentMesh
+        if(action != 'rotate')
+          gizmo.attachedMesh = currentMesh
+        else
+          gizmo.attachedMesh = sphereAbstract
       }
     }
   
@@ -57,9 +68,11 @@ const myScene = {
     
     engine.runRenderLoop(() => {
       scene.render();
+      this.AbstractMesh = sphereAbstract
       this.utilLayer = utilLayer
       this.currentMesh = currentMesh
       gizmo = this.gizmo
+      action = this.action
     });
 
   },
@@ -67,20 +80,29 @@ const myScene = {
   ChangeGizmo: function(cur_gizmo){
     switch(cur_gizmo){
       case 'cursor':
+        this.action = 'cursor'
         this.gizmo.attachedMesh = null
         this.gizmo = null
         break
       case 'offset':
+        this.action = 'offset'
         this.ClearGizmo(this.gizmo)
         this.gizmo = new BABYLON.PositionGizmo(this.utilLayer);
-        this.gizmo.attachedMesh = this.currentMesh
+        if(this.currentMesh){
+          this.gizmo.attachedMesh = this.AbstractMesh
+        }
         break
       case 'rotate':
+        this.action = 'rotate'
         this.ClearGizmo(this.gizmo)
         this.gizmo = new BABYLON.RotationGizmo(this.utilLayer);
-        this.gizmo.attachedMesh = this.currentMesh
+        if(this.currentMesh){
+          this.gizmo.updateGizmoRotationToMatchAttachedMesh = true
+          this.gizmo.attachedMesh = this.AbstractMesh
+        }
         break
       case 'scale':
+        this.action = 'scale'
         this.ClearGizmo(this.gizmo)
         this.gizmo = new BABYLON.ScaleGizmo(this.utilLayer);
         this.gizmo.attachedMesh = this.currentMesh
