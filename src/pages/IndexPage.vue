@@ -1,16 +1,14 @@
 <template>
   <q-page class="q-pa-md">
-    <canvas ref="bjsCanvas" width="500" height="500" />
+    <div class="flex flex-center">
+      <canvas ref="bjsCanvas" width="500" height="500" />
+    </div>
 
-    <div class="q-gutter-sm flex flex-center block">
+    <div class="q-gutter-sm flex flex-center q-mt-sm">
       <q-radio dense v-model="shape" val="cursor" label="Курсор" />
       <q-radio dense v-model="shape" val="offset" label="Смещение" />
       <q-radio dense v-model="shape" val="rotate" label="Вращение" />
       <q-radio dense v-model="shape" val="scale" label="Маштабирование" />
-    </div>
-
-    <div class="q-px-sm q-pt-sm">
-      Выбрано: <strong>{{ shape }}</strong>
     </div>
   </q-page>
 </template>
