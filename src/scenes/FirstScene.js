@@ -1,8 +1,11 @@
 import * as BABYLON from "babylonjs"
+
 const myScene = {
+  
   gizmo: null,
   utilLayer: null,
   currentMesh: null,
+
   createScene: function (canvas) {
     const engine = new BABYLON.Engine(canvas);
     let scene = new BABYLON.Scene(engine);
@@ -64,40 +67,32 @@ const myScene = {
   ChangeGizmo: function(cur_gizmo){
     switch(cur_gizmo){
       case 'cursor':
-        if(this.gizmo !== null){
-          if(this.gizmo.attachedMesh !== null){
-            this.gizmo.attachedMesh = null
-          }
-        }
+        this.gizmo.attachedMesh = null
         this.gizmo = null
         break
       case 'offset':
-        if(this.gizmo !== null){
-          if(this.gizmo.attachedMesh !== null){
-            this.gizmo.attachedMesh = null
-          }
-        }
+        this.ClearGizmo(this.gizmo)
         this.gizmo = new BABYLON.PositionGizmo(this.utilLayer);
         this.gizmo.attachedMesh = this.currentMesh
         break
       case 'rotate':
-        if(this.gizmo !== null){
-          if(this.gizmo.attachedMesh !== null){
-            this.gizmo.attachedMesh = null
-          }
-        }
+        this.ClearGizmo(this.gizmo)
         this.gizmo = new BABYLON.RotationGizmo(this.utilLayer);
         this.gizmo.attachedMesh = this.currentMesh
         break
       case 'scale':
-        if(this.gizmo !== null){
-          if(this.gizmo.attachedMesh !== null){
-            this.gizmo.attachedMesh = null
-          }
-        }
+        this.ClearGizmo(this.gizmo)
         this.gizmo = new BABYLON.ScaleGizmo(this.utilLayer);
         this.gizmo.attachedMesh = this.currentMesh
         break
+    }
+  },
+
+  ClearGizmo: function(gizmo){
+    if(gizmo !== null){
+      if(gizmo.attachedMesh !== null){
+        this.gizmo.attachedMesh = null
+      }
     }
   }
 }
